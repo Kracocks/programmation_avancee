@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def home(request, param):
+def home(request, param="World"):
     return HttpResponse(f"""<h1>Hello {param}!</h1>""")
 
 def contact_us(request):
