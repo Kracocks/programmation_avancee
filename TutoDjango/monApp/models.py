@@ -7,12 +7,20 @@ class Categorie(models.Model):
     def __str__(self):
         return self.nomCat
 
+class Status(models.Model):
+    identifiant = models.AutoField(primary_key=True)
+    libelle = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.libelle
+
 class Produit(models.Model):
     refProd = models.AutoField(primary_key=True)
     intituleProd = models.CharField(max_length=200)
     prixUnitaireProd = models.DecimalField(max_digits=10, decimal_places=2)
-    dateFabricationProd = models.DateField(auto_now_add=True)
+    dateFabricationProd = models.DateField(null=False, auto_now=True)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name="produits", null=True, blank=True)
+    status = models.ForeignKey(Status, on_delete=models.CASCADE, related_name="produits", null=True, blank=True)
     rayons = models.ManyToManyField("Rayon", through="Contenir", blank=True)
 
     def __str__(self):
