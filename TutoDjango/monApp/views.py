@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from .models import Produit, Categorie, Status
 
 def home(request, param="World"):
-    return HttpResponse(f"""<h1>Hello {param}!</h1>""")
+    string =request.GET["name"]
+    return HttpResponse(f"""<h1>Hello {param}!</h1>
+                        <p>{string}</p>""")
 
 def contact_us(request):
     return HttpResponse("""<h1>Contact Us</h1>

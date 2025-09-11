@@ -11,3 +11,6 @@ J'ai __créer un modèle relié à une base de données__ avec 4 entitées (Prod
 ## TD2
 
 J'ai __ajouté un administrateur__ avec la commande (python manage.py createsuperuser) et j'ai pu voir comment __afficher la page administrateur__ et la modifier avec le fichier admin.py. J'ai modifier la page admin des produits pour __modifier plusieurs produits__ en même temps. J'ai ajouté une __barre de recherche__ et __modifier les actions__ lors d'une mise a jour. J'ai ajouté une autre __colonne personnalisée__. Pour finir, j'ai ajouté une __barre de debugage__.
+
+## TP2
+

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 class Categorie(models.Model):
     idCat = models.AutoField(primary_key=True)
@@ -18,7 +19,7 @@ class Produit(models.Model):
     refProd = models.AutoField(primary_key=True)
     intituleProd = models.CharField(max_length=200)
     prixUnitaireProd = models.DecimalField(max_digits=10, decimal_places=2)
-    dateFabricationProd = models.DateField(null=False)
+    dateFabricationProd = models.DateField(null=False, default=date.today)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name="produits", null=True, blank=True)
     status = models.ForeignKey(Status, on_delete=models.CASCADE, related_name="produits", null=True, blank=True)
     rayons = models.ManyToManyField("Rayon", through="Contenir", blank=True)
