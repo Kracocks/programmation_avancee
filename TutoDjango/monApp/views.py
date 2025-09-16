@@ -1,43 +1,30 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Produit, Categorie, Status
+from django.http import HttpResponse, Http404
+from .models import Produit, Categorie, Status, Rayon
 
-def home(request, param="World"):
-    string =request.GET["name"]
-    return HttpResponse(f"""<h1>Hello {param}!</h1>
-                        <p>{string}</p>""")
+def home(request):
+    if request.GET and request.GET["test"]:
+        raise Http404
+    return HttpResponse("Bonjour Monde!")
 
 def contact_us(request):
-    return HttpResponse("""<h1>Contact Us</h1>
-                            <p>contact us</p>""")
+    return render(request, 'monApp/contact.html')
 
 def about_us(request):
-    return HttpResponse("""<h1>About Us</h1>
-                            <p>about us</p>""")
+    return render(request, 'monApp/about.html')
 
 def listProduits(request):
     prdts = Produit.objects.all()
-    res = "<ul>"
-    for prdt in prdts:
-        res += f"<li>{prdt}</li>"
-    res += "</ul>"
-
-    return HttpResponse(res)
+    return render(request, 'monApp/list_produits.html', {'produits': prdts})
 
 def listCategories(request):
     categories = Categorie.objects.all()
-    res = "<ul>"
-    for categorie in categories:
-        res += f"<li>{categorie}</li>"
-    res += "</ul>"
-
-    return HttpResponse(res)
+    return render(request, 'monApp/list_categories.html', {'categs': categories})
 
 def listStatus(request):
     status = Status.objects.all()
-    res = "<ul>"
-    for statut in status:
-        res += f"<li>{statut}</li>"
-    res += "</ul>"
+    return render(request, 'monApp/list_status.html', {'status': status})
 
-    return HttpResponse(res)
+def listRayons(request):
+    rayons = Rayon.objects.all()
+    return render(request, 'monApp/list_rayons.html', {'rayons': rayons})

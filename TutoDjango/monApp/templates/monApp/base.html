@@ -1,0 +1,12 @@
+{% load static %}
+<html>
+    <head>
+        <title>Mon app DJANGO</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}"/>
+        {% comment %} <link rel="stylesheet" href="{% static 'styles.css' %}" /> {% endcomment %}
+    </head>
+    <body>
+        {% block contenu %}
+        {% endblock %}
+    </body>
+</html>

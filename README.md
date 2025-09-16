@@ -2,7 +2,7 @@
 
 ## TD1
 
-Sur le TD1 j'ai appris a utiliser Django. Que sa soit pour créer un projet puis y ajouter une application. J'ai aussi appris à ajouter une url dans une application, avec ou sans des paramètres
+Sur le TD1 j'ai appris a utiliser Django. Que sa soit pour __créer un projet__ puis y __ajouter une application__. J'ai aussi appris à __ajouter une url__ dans une application, __avec ou sans des paramètres__
 
 ## TP1
 
@@ -14,3 +14,4 @@ J'ai __ajouté un administrateur__ avec la commande (python manage.py createsupe
 
 ## TP2
 
+Utilisation du __paramètre "request"__ pour récupérer le GET et __création d'un template__ dans le dossier templates/[nom application]/[nom fichier]. Ajout d'instructions logiques (for, if, ...) dans le template. J'ai ajouté un base.html pour le contenu global de l'application et transformé les autres pages en bloc qui extends "monApp/base.html". Ajout d'un style avec du css dans le dossier 'static' et la balise {% load static %}.
