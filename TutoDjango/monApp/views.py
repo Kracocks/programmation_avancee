@@ -1,7 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.views.generic import *
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import *
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from .models import Produit, Categorie, Status, Rayon
+from .forms import ContactUsForm
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -26,12 +31,28 @@ class AboutView(TemplateView):
     def post(self, request, **kwargs):
         return render(request, self.template_name)
 
-class ContactView(TemplateView):
-    template_name = "monApp/page_home.html"
+def ContactView(request):
+    if request.method=='POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            send_mail(
+                subject=f'Message from {form.cleaned_data["name"] or "anonyme"} via TutoDjango Contact form',
+                message=form.cleaned_data['message'],
+                from_email=form.cleaned_data['email'],
+                recipient_list=['admin@monApp.com'],    
+            )
+            return redirect('email-sent')
+    else:
+        form = ContactUsForm()
+    titreh1 = "Contact us !"
+    return render(request, "monApp/page_home.html", {'titreh1':titreh1, 'form':form})
+
+class EmailSentView(TemplateView):
+    template_name = "monApp/page_email_sent.html"
 
     def get_context_data(self, **kwargs):
-        context = super(ContactView, self).get_context_data(**kwargs)
-        context['titreh1'] = "Contact us..."
+        context = super(EmailSentView, self).get_context_data(**kwargs)
+        context['titreh1'] = "Votre mail à été envoyé !"
         return context
 
     def post(self, request, **kwargs):
@@ -132,3 +153,24 @@ class ConnectView(LoginView):
             return render(request, 'monApp/page_home.html', {'param': lgn, 'message': "You're connected"})
         else:
             return render(request, 'monApp/page_register.html')
+
+class RegisterView(TemplateView):
+    template_name = 'monApp/page_register.html'
+
+    def post(self, request, **kwargs):
+        username = request.POST.get('username', False)
+        mail = request.POST.get('mail', False)
+        password = request.POST.get('password', False)
+        user = User.objects.create_user(username, mail, password)
+        user.save()
+        if user is not None and user.is_active:
+            return render(request, 'monApp/page_login.html')
+        else:
+            return render(request, 'monApp/page_register.html')
+
+class DisconnectView(TemplateView):
+    template_name = 'monApp/page_logout.html'
+
+    def get(self, request, **kwargs):
+        logout(request)
+        return render(request, self.template_name)

@@ -17,4 +17,4 @@ J'ai __ajouté un administrateur__ avec la commande (python manage.py createsupe
 Utilisation du __paramètre "request"__ pour récupérer le GET et __création d'un template__ dans le dossier templates/[nom application]/[nom fichier]. Ajout d'instructions logiques (for, if, ...) dans le template. J'ai ajouté un base.html pour le contenu global de l'application et transformé les autres pages en bloc qui extends "monApp/base.html". Ajout d'un style avec du css dans le dossier 'static' et la balise {% load static %}. __Ajout de bootstrap__ avec "django_bootstrap5".
 
 ## TD3
-Modification des vues pour avoir des vues génériques en utilisant __TemplateView__, __ListView__ et __DetailView__
+Modification des vues pour avoir des vues génériques en utilisant __TemplateView__, __ListView__ et __DetailView__. Ajout d'un firmulaire pour se connecter et pour creer un compte ainsi qu'un bouton pour se déconnecter. Ajout d'un formulaire dans __form.py__ pour un envoie d'email.
