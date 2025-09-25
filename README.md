@@ -18,3 +18,6 @@ Utilisation du __paramètre "request"__ pour récupérer le GET et __création d
 
 ## TD3
 Modification des vues pour avoir des vues génériques en utilisant __TemplateView__, __ListView__ et __DetailView__. Ajout d'un firmulaire pour se connecter et pour creer un compte ainsi qu'un bouton pour se déconnecter. Ajout d'un formulaire dans __form.py__ pour un envoie d'email.
+
+## TP3
+Ajout de page pour l'ajout, la modification et la suppréssion d'objet.
