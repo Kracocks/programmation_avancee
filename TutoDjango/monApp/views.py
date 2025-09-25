@@ -5,8 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import *
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.forms import BaseModelForm
+from django.urls import reverse_lazy
 from .models import Produit, Categorie, Status, Rayon
-from .forms import ContactUsForm
+from .forms import ContactUsForm, ProduitForm, CategForm, RayonForm, StatusForm
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -79,6 +81,29 @@ class ProduitDetailView(DetailView):
         context['titremenu'] = "Détail du produit"
         return context
 
+class ProduitCreateView(CreateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/create_produit.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('detail_produit', prdt.refProd)
+
+class ProduitUpdateView(UpdateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/update_produit.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('detail_produit', prdt.refProd)
+
+class ProduitDeleteView(DeleteView):
+    model = Produit
+    template_name = "monApp/delete_produit.html"
+    success_url = reverse_lazy('produits')
+
 # Pages Categorie
 class CategListView(ListView):
     model = Categorie
@@ -99,6 +124,29 @@ class CategDetailView(DetailView):
         context = super(CategDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail de la catégorie"
         return context
+
+class CategCreateView(CreateView):
+    model = Produit
+    form_class=CategForm
+    template_name = "monApp/create_categorie.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        categ = form.save()
+        return redirect('detail_categorie', categ.idCat)
+
+class CategUpdateView(UpdateView):
+    model = Categorie
+    form_class=CategForm
+    template_name = "monApp/update_categorie.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        categ = form.save()
+        return redirect('detail_categorie', categ.idCat)
+
+class CategDeleteView(DeleteView):
+    model = Categorie
+    template_name = "monApp/delete_categorie.html"
+    success_url = reverse_lazy('categories')
 
 # Pages Rayon
 class RayonListView(ListView):
@@ -121,6 +169,29 @@ class RayonDetailView(DetailView):
         context['titremenu'] = "Détail du rayon"
         return context
 
+class RayonCreateView(CreateView):
+    model = Rayon
+    form_class=RayonForm
+    template_name = "monApp/create_rayon.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon = form.save()
+        return redirect('detail_rayon', rayon.idRayon)
+
+class RayonUpdateView(UpdateView):
+    model = Rayon
+    form_class=RayonForm
+    template_name = "monApp/update_rayon.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon = form.save()
+        return redirect('detail_rayon', rayon.idRayon)
+
+class RayonDeleteView(DeleteView):
+    model = Rayon
+    template_name = "monApp/delete_rayon.html"
+    success_url = reverse_lazy('rayons')
+
 # Pages Status
 class StatusListView(ListView):
     model = Status
@@ -142,6 +213,30 @@ class StatusDetailView(DetailView):
         context['titremenu'] = "Détail du statut"
         return context
 
+class StatusCreateView(CreateView):
+    model = Status
+    form_class=StatusForm
+    template_name = "monApp/create_status.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        statut = form.save()
+        return redirect('detail_status', statut.identifiant)
+
+class StatusUpdateView(UpdateView):
+    model = Status
+    form_class=StatusForm
+    template_name = "monApp/update_status.html"
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        statut = form.save()
+        return redirect('detail_status', statut.identifiant)
+
+class StatusDeleteView(DeleteView):
+    model = Status
+    template_name = "monApp/delete_status.html"
+    success_url = reverse_lazy('status')
+
+# Page Login
 class ConnectView(LoginView):
     template_name = 'monApp/page_login.html'
     def post(self, request, **kwargs):

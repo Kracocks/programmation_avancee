@@ -9,4 +9,6 @@
     <li>Identifiant statut : {{statut.identifiant }} </li>
     <li>Libelle : {{ statut.libelle }} </li>
 </ul>
+<a href="{% url 'change_statut' statut.identifiant %}">modifier</a>
+<a href="{% url 'delete_statut' statut.identifiant %}">supprimer</a>
 {% endblock %}

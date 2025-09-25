@@ -9,4 +9,6 @@
     <li>Identifiant rayon : {{rayon.idRayon }} </li>
     <li>Nom rayon : {{ rayon.nomRayon }} </li>
 </ul>
+<a href="{% url 'change_rayon' rayon.idRayon %}">modifier</a>
+<a href="{% url 'delete_rayon' rayon.idRayon %}">supprimer</a>
 {% endblock %}

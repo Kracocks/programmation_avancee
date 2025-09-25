@@ -12,4 +12,6 @@
     <li>Catégorie : {{ produit.categorie }} </li>
     <li>Statut : {{ produit.status }}</li>
 </ul>
+<a href="{% url 'change_produit' produit.refProd %}">modifier</a>
+<a href="{% url 'delete_produit' produit.refProd %}">supprimer</a>
 {% endblock %}

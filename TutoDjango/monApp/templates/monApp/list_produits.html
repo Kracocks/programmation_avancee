@@ -11,6 +11,8 @@
             <th>Date fabrication</th>
             <th>Catégorie</th>
             <th>Statut</th>
+            <th><th>
+            <th><th>
         </thead>
         <tbody>
             {% for prdt in produits %}
@@ -21,6 +23,8 @@
                 <td>{{ prdt.dateFabricationProd }} </td>
                 <td>{{ prdt.categorie }} </td>
                 <td>{{ prdt.status }} </td>
+                <td><a href="{% url 'change_produit' prdt.refProd %}">modifier</a><td>
+                <td><a href="{% url 'delete_produit' prdt.refProd %}">supprimer</a><td>
             </tr>
             {% endfor %}
         </tbody>
@@ -36,4 +40,5 @@
         {% endif %}
         produits préférés.
     </p>
+    <a href="{% url 'creer_produit' %}">Créer un nouveau produit</a>
 {% endblock %}
