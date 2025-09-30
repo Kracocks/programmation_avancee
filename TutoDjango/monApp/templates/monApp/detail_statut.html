@@ -3,12 +3,46 @@
     <h1>{{titremenu}}</h1>
 {% endblock %}
 {% block contenu %}
-<a href="{% url 'produits' %}">Retour à la liste des status</a>
-<h2>{{ statut.identifiant }}</h2>
-<ul>
-    <li>Identifiant statut : {{statut.identifiant }} </li>
-    <li>Libelle : {{ statut.libelle }} </li>
-</ul>
-<a href="{% url 'change_statut' statut.identifiant %}">modifier</a>
-<a href="{% url 'delete_statut' statut.identifiant %}">supprimer</a>
+<a href="{% url 'status'%}" class="btn btn-info mt-2">Retour</a>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Détail du statut</h4>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ statut.libelle }}</h5>
+        <ul class="list-unstyled">
+            <li><strong>Référence :</strong> {{ statut.identifiant }}</li>
+            <li><strong>Libelle statut :</strong> {{ statut.libelle }}</li>
+        </ul>
+        <div class="car-footer text-center">
+            <a href="{% url 'change_statut' statut.identifiant %}" class="btn btn-warning mt-2">Modifier</a>
+            <a href="{% url 'delete_statut' statut.identifiant %}" class="btn btn-danger mt-2">Supprimer</a>
+        </div>
+    </div>
+</div>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Cette catégorie contient <strong>{{ statut.nb_produits }}</strong> produit(s)</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% if produits %}
+                {% for prdt in produits %}
+                <div class="col-sm-3">
+                    <div class="card mb-2 text-center">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">{{ prdt.intituleProd }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'detail_produit' prdt.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">Aucun produit trouvé pour cette catégorie.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

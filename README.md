@@ -21,3 +21,6 @@ Modification des vues pour avoir des vues génériques en utilisant __TemplateVi
 
 ## TP3
 Ajout de page pour l'ajout, la modification et la suppréssion d'objet.
+
+## TD4
+Affichage des pages de détails en ajoutant les informations sur leurs relations

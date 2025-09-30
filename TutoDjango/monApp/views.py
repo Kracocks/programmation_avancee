@@ -128,6 +128,7 @@ class CategDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CategDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail de la catégorie"
+        context['produits'] = self.object.produits.all()
         return context
 
 class CategCreateView(CreateView):
@@ -162,6 +163,13 @@ class RayonListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(RayonListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes rayons"
+        rayons_data = []
+        for rayon in context['rayons']:
+            total = 0
+            for contenir in rayon.rayons.all():
+                total += contenir.produits.prixUnitaireProd * contenir.quantite
+            rayons_data.append({'rayon': rayon,'total_stock': total})
+        context['rayons_data'] = rayons_data
         return context
 
 class RayonDetailView(DetailView):
@@ -172,6 +180,22 @@ class RayonDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(RayonDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du rayon"
+        produits_data = []
+        total_rayon = 0
+        total_nb_produit = 0
+
+        for contenir in self.object.rayons.all():
+            total_produit = contenir.produits.prixUnitaireProd * contenir.quantite
+            produits_data.append({ 'produit': contenir.produits,
+                                   'qte': contenir.quantite,
+                                   'prix_unitaire': contenir.produits.prixUnitaireProd,
+                                   'total_produit': total_produit})
+            total_rayon += total_produit
+            total_nb_produit += contenir.quantite
+
+        context['produits_data'] = produits_data
+        context['total_rayon'] = total_rayon
+        context['total_nb_produit'] = total_nb_produit
         return context
 
 class RayonCreateView(CreateView):
@@ -203,6 +227,10 @@ class StatusListView(ListView):
     template_name = "monApp/list_status.html"
     context_object_name = "status"
 
+    def get_queryset(self):
+        # Annoter chaque catégorie avec le nombre de produits liés
+        return Status.objects.annotate(nb_produits=Count('produits'))
+
     def get_context_data(self, **kwargs):
         context = super(StatusListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes status"
@@ -216,6 +244,7 @@ class StatusDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(StatusDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du statut"
+        context['produits'] = self.object.produits.all()
         return context
 
 class StatusCreateView(CreateView):
@@ -225,20 +254,20 @@ class StatusCreateView(CreateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         statut = form.save()
-        return redirect('detail_status', statut.identifiant)
+        return redirect('detail_statut', statut.identifiant)
 
 class StatusUpdateView(UpdateView):
     model = Status
     form_class=StatusForm
-    template_name = "monApp/update_status.html"
+    template_name = "monApp/update_statut.html"
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         statut = form.save()
-        return redirect('detail_status', statut.identifiant)
+        return redirect('detail_statut', statut.identifiant)
 
 class StatusDeleteView(DeleteView):
     model = Status
-    template_name = "monApp/delete_status.html"
+    template_name = "monApp/delete_statut.html"
     success_url = reverse_lazy('status')
 
 # Page Login
