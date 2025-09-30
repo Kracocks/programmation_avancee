@@ -7,12 +7,20 @@
         <thead>
             <th>Id</th>
             <th>Nom catégorie</th>
+            <th>Nombre de produits</th>
+            <th></th>
         </thead>
         <tbody>
             {% for categ in categs %}
             <tr>
                 <td><a href="{% url 'detail_categ' categ.idCat %}">{{ categ.idCat }}</a></td>
                 <td>{{ categ.nomCat }} </td>
+                <td>{{ categ.nb_produits }}</td>
+                <td>
+                    <a href="{% url 'detail_categ' categ.idCat %}" class="btn btn-primary mt-2">Détails</a>
+                    <a href="{% url 'change_categorie' categ.idCat %}" class="btn btn-warning mt-2">Modifier</a>
+                    <a href="{% url 'delete_categorie' categ.idCat %}" class="btn btn-danger mt-2">Supprimer</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

@@ -1,3 +1,4 @@
+from django.db.models import *
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.views.generic import *
@@ -110,6 +111,10 @@ class CategListView(ListView):
     template_name = "monApp/list_categories.html"
     context_object_name = "categs"
 
+    def get_queryset(self):
+        # Annoter chaque catégorie avec le nombre de produits liés
+        return Categorie.objects.annotate(nb_produits=Count('produits'))
+
     def get_context_data(self, **kwargs):
         context = super(CategListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes catégories"
@@ -132,7 +137,7 @@ class CategCreateView(CreateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         categ = form.save()
-        return redirect('detail_categorie', categ.idCat)
+        return redirect('detail_categ', categ.idCat)
 
 class CategUpdateView(UpdateView):
     model = Categorie
@@ -141,7 +146,7 @@ class CategUpdateView(UpdateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         categ = form.save()
-        return redirect('detail_categorie', categ.idCat)
+        return redirect('detail_categ', categ.idCat)
 
 class CategDeleteView(DeleteView):
     model = Categorie
