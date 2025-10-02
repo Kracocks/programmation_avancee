@@ -24,3 +24,10 @@ Ajout de page pour l'ajout, la modification et la suppréssion d'objet.
 
 ## TD4
 Affichage des pages de détails en ajoutant les informations sur leurs relations
+```python
+python manage.py graph_models -a -o mcd.png
+```
+pour générer le MCD
+Ajout de login required pour l'ajout, la modifications et la suppréssion des éléments dans la base de données.
+Ajout d'une barre de recherche
+Ajout de produits dans un rayon

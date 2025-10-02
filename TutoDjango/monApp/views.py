@@ -8,8 +8,10 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.forms import BaseModelForm
 from django.urls import reverse_lazy
-from .models import Produit, Categorie, Status, Rayon
-from .forms import ContactUsForm, ProduitForm, CategForm, RayonForm, StatusForm
+from .models import Produit, Categorie, Status, Rayon, Contenir
+from .forms import ContactUsForm, ProduitForm, CategForm, RayonForm, StatusForm, ContenirForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -67,6 +69,13 @@ class ProduitListView(ListView):
     template_name = "monApp/list_produits.html"
     context_object_name = "produits"
 
+    def get_queryset(self):
+        # Charge les catégories et les statuts en même temps
+        query = self.request.GET.get('search')
+        if query:
+            return Produit.objects.filter(intituleProd__icontains=query).select_related('categorie').select_related('status')
+        return Produit.objects.select_related('categorie').select_related('status')
+
     def get_context_data(self, **kwargs):
         context = super(ProduitListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes produits"
@@ -82,6 +91,7 @@ class ProduitDetailView(DetailView):
         context['titremenu'] = "Détail du produit"
         return context
 
+@method_decorator(login_required, name="dispatch")
 class ProduitCreateView(CreateView):
     model = Produit
     form_class=ProduitForm
@@ -91,6 +101,7 @@ class ProduitCreateView(CreateView):
         prdt = form.save()
         return redirect('detail_produit', prdt.refProd)
 
+@method_decorator(login_required, name="dispatch")
 class ProduitUpdateView(UpdateView):
     model = Produit
     form_class=ProduitForm
@@ -100,6 +111,7 @@ class ProduitUpdateView(UpdateView):
         prdt = form.save()
         return redirect('detail_produit', prdt.refProd)
 
+@method_decorator(login_required, name="dispatch")
 class ProduitDeleteView(DeleteView):
     model = Produit
     template_name = "monApp/delete_produit.html"
@@ -113,6 +125,9 @@ class CategListView(ListView):
 
     def get_queryset(self):
         # Annoter chaque catégorie avec le nombre de produits liés
+        query = self.request.GET.get('search')
+        if query:
+            return Categorie.objects.filter(nomCat__icontains=query).annotate(nb_produits=Count('produits'))
         return Categorie.objects.annotate(nb_produits=Count('produits'))
 
     def get_context_data(self, **kwargs):
@@ -131,6 +146,7 @@ class CategDetailView(DetailView):
         context['produits'] = self.object.produits.all()
         return context
 
+@method_decorator(login_required, name="dispatch")
 class CategCreateView(CreateView):
     model = Produit
     form_class=CategForm
@@ -140,6 +156,7 @@ class CategCreateView(CreateView):
         categ = form.save()
         return redirect('detail_categ', categ.idCat)
 
+@method_decorator(login_required, name="dispatch")
 class CategUpdateView(UpdateView):
     model = Categorie
     form_class=CategForm
@@ -149,6 +166,7 @@ class CategUpdateView(UpdateView):
         categ = form.save()
         return redirect('detail_categ', categ.idCat)
 
+@method_decorator(login_required, name="dispatch")
 class CategDeleteView(DeleteView):
     model = Categorie
     template_name = "monApp/delete_categorie.html"
@@ -159,6 +177,18 @@ class RayonListView(ListView):
     model = Rayon
     template_name = "monApp/list_rayons.html"
     context_object_name = "rayons"
+
+    def get_queryset(self):
+        # Précharge tous les "contenir" de chaque rayon,
+        # et en même temps le produit de chaque contenir
+        query = self.request.GET.get('search')
+        if query:
+            return Rayon.objects.filter(nomRayon__icontains=query).prefetch_related(
+                Prefetch("rayons", queryset=Contenir.objects.select_related("produits"))
+            )
+        return Rayon.objects.prefetch_related(
+            Prefetch("rayons", queryset=Contenir.objects.select_related("produits"))
+        )
 
     def get_context_data(self, **kwargs):
         context = super(RayonListView, self).get_context_data(**kwargs)
@@ -198,6 +228,7 @@ class RayonDetailView(DetailView):
         context['total_nb_produit'] = total_nb_produit
         return context
 
+@method_decorator(login_required, name="dispatch")
 class RayonCreateView(CreateView):
     model = Rayon
     form_class=RayonForm
@@ -207,6 +238,7 @@ class RayonCreateView(CreateView):
         rayon = form.save()
         return redirect('detail_rayon', rayon.idRayon)
 
+@method_decorator(login_required, name="dispatch")
 class RayonUpdateView(UpdateView):
     model = Rayon
     form_class=RayonForm
@@ -216,6 +248,7 @@ class RayonUpdateView(UpdateView):
         rayon = form.save()
         return redirect('detail_rayon', rayon.idRayon)
 
+@method_decorator(login_required, name="dispatch")
 class RayonDeleteView(DeleteView):
     model = Rayon
     template_name = "monApp/delete_rayon.html"
@@ -229,6 +262,9 @@ class StatusListView(ListView):
 
     def get_queryset(self):
         # Annoter chaque catégorie avec le nombre de produits liés
+        query = self.request.GET.get('search')
+        if query:
+            return Status.objects.filter(libelle__icontains=query).annotate(nb_produits=Count('produits'))
         return Status.objects.annotate(nb_produits=Count('produits'))
 
     def get_context_data(self, **kwargs):
@@ -247,6 +283,7 @@ class StatusDetailView(DetailView):
         context['produits'] = self.object.produits.all()
         return context
 
+@method_decorator(login_required, name="dispatch")
 class StatusCreateView(CreateView):
     model = Status
     form_class=StatusForm
@@ -256,6 +293,7 @@ class StatusCreateView(CreateView):
         statut = form.save()
         return redirect('detail_statut', statut.identifiant)
 
+@method_decorator(login_required, name="dispatch")
 class StatusUpdateView(UpdateView):
     model = Status
     form_class=StatusForm
@@ -265,10 +303,29 @@ class StatusUpdateView(UpdateView):
         statut = form.save()
         return redirect('detail_statut', statut.identifiant)
 
+@method_decorator(login_required, name="dispatch")
 class StatusDeleteView(DeleteView):
     model = Status
     template_name = "monApp/delete_statut.html"
     success_url = reverse_lazy('status')
+
+# Create
+@method_decorator(login_required, name="dispatch")
+class ContenirCreateView(CreateView):
+    model = Contenir
+    form_class=ContenirForm
+    template_name = "monApp/create_contenir.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ContenirCreateView, self).get_context_data(**kwargs)
+        context['rayon'] = self.kwargs.get("pk")
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        contenir = form.save(commit=False)
+        contenir.rayons = Rayon.objects.get(pk=self.kwargs['pk'])
+        contenir.save()
+        return redirect('detail_rayon', contenir.rayons.idRayon)
 
 # Page Login
 class ConnectView(LoginView):
