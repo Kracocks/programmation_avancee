@@ -31,3 +31,4 @@ pour générer le MCD
 Ajout de login required pour l'ajout, la modifications et la suppréssion des éléments dans la base de données.
 Ajout d'une barre de recherche
 Ajout de produits dans un rayon
+Ajout d'une page pour creer, modifier et supprimer une relation entre un produit et un rayon

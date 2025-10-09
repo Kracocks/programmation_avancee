@@ -17,7 +17,7 @@
             <div class="car-footer text-center">
                 <a href="{% url 'change_rayon' rayon.idRayon %}" class="btn btn-warning mt-2">Modifier</a>
                 <a href="{% url 'delete_rayon' rayon.idRayon %}" class="btn btn-danger mt-2">Supprimer</a>
-                <a href="{% url 'cntnr-crt' rayon.idRayon %}" class="btn btn-success mt-2">Ajouter un produit </a>
+                <a href="{% url 'cntnr_crt' rayon.idRayon %}" class="btn btn-success mt-2">Ajouter un produit </a>
             </div>
         </div>
     </div>
@@ -41,7 +41,9 @@
                                     <li>Quantité : {{data.qte }} </li>
                                     <li>Total : {{ data.total_produit}} €</li>
                                 </ul>
-                                <a href="{% url 'detail_produit' data.produit.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                                <a href="{% url 'detail_produit' data.contenir.id %}" class="btn btn-primary mt-2">Détails</a>
+                                <a href="{% url 'cntnr_upt' rayon.idRayon data.contenir.id %}" class="btn btn-primary mt-2">Changer la quantite</a>
+                                <a href="{% url 'cntnr_dlt' rayon.idRayon data.contenir.id %}" class="btn btn-primary mt-2">Supprimer</a>
                             </div>
                         </div>
                     </div>

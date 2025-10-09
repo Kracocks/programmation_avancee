@@ -30,7 +30,9 @@ urlpatterns = [
     path("statut/<pk>/update/",views.StatusUpdateView.as_view(), name="change_statut"),
     path("statut/<pk>/delete/",views.StatusDeleteView.as_view(), name="delete_statut"),
 
-    path('rayon/<pk>/cntnr', views.ContenirCreateView.as_view(), name='cntnr-crt'),
+    path('rayon/<pk>/contenir/', views.ContenirCreateView.as_view(), name='cntnr_crt'),
+    path('rayon/<pk_r>/contenir/<pk_c>/update/', views.ContenirUpdateView.as_view(), name='cntnr_upt'),
+    path('rayon/<pk1>/contenir/<pk_c>/delete/', views.ContenirDeleteView.as_view(), name='cntnr_dlt'),
 
     path("contact_us/", views.ContactView, name="contact_us"),
     path('email_sent/', views.EmailSentView.as_view(), name="email-sent"),

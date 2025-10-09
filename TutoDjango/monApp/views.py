@@ -216,7 +216,8 @@ class RayonDetailView(DetailView):
 
         for contenir in self.object.rayons.all():
             total_produit = contenir.produits.prixUnitaireProd * contenir.quantite
-            produits_data.append({ 'produit': contenir.produits,
+            produits_data.append({ 'contenir': contenir,
+                                   'produit': contenir.produits,
                                    'qte': contenir.quantite,
                                    'prix_unitaire': contenir.produits.prixUnitaireProd,
                                    'total_produit': total_produit})
@@ -322,10 +323,48 @@ class ContenirCreateView(CreateView):
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        rayon = Rayon.objects.get(pk=self.kwargs['pk'])
+        produit = form.cleaned_data['produits']
+        quantite = form.cleaned_data['quantite']
+
+        contenir_existe = Contenir.objects.filter(rayons=rayon, produits=produit).first()
+
+        if contenir_existe:
+            contenir_existe.quantite += quantite
+            contenir_existe.save()
+        else:
+            contenir = form.save(commit=False)
+            contenir.rayons = rayon
+            contenir.save()
+        return redirect('detail_rayon', rayon.idRayon)
+
+@method_decorator(login_required, name='dispatch')
+class ContenirUpdateView(UpdateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = "monApp/update_contenir.html"
+    pk_url_kwarg = 'pk_c'
+
+    def form_valid(self, form):
         contenir = form.save(commit=False)
-        contenir.rayons = Rayon.objects.get(pk=self.kwargs['pk'])
-        contenir.save()
+
+        if contenir.quantite <= 0:
+            contenir.delete()
+        else:
+            contenir.save()
+
         return redirect('detail_rayon', contenir.rayons.idRayon)
+
+
+@method_decorator(login_required, name='dispatch')
+class ContenirDeleteView(DeleteView):
+    model = Contenir
+    template_name = "monApp/delete_contenir.html"
+    pk_url_kwarg = 'pk_c'
+
+    def get_success_url(self):
+        rayon = self.object.rayons
+        return reverse_lazy('detail_rayon', args=[rayon.idRayon])
 
 # Page Login
 class ConnectView(LoginView):

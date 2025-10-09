@@ -1,0 +1,10 @@
+{% extends 'monApp/base.html' %}
+{% block contenu %}
+<h1> Modification de la quantite du produit {{ object.intituleProd }} du rayon {{ object.nomRayon }} </h1>
+<form action="" method="post" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-2">Modifier</button>
+    <a href="{% url 'detail_rayon' object.rayons.idRayon %}" class="btn btn-info mt-2">Retour</a>
+</form>
+{% endblock %}
