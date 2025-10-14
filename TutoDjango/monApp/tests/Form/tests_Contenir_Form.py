@@ -1,0 +1,29 @@
+from django.test import TestCase
+from monApp.forms import ContenirForm
+from monApp.models import Produit
+
+class ContenirFormTest(TestCase):
+    def test_form_valid_data(self):
+        produit = Produit.objects.create(intituleProd="prod", prixUnitaireProd=59.99, dateFabricationProd='2025-09-09')
+        form = ContenirForm(data = {'produits': produit, 'quantite': 60})
+        self.assertTrue(form.is_valid()) # Le formulaire doit être valide
+    
+    # def test_form_valid_data_too_long(self):
+    #     form = ContenirForm(data = {'nomContenir': 'ContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTestContenirPourTest'})
+    #     self.assertFalse(form.is_valid()) # Le formulaire doit être invalide
+    #     self.assertIn('nomContenir', form.errors) # Le champ 'nomContenir' doit contenir une erreur
+    #     self.assertEqual(form.errors['nomContenir'], ['Assurez-vous que cette valeur comporte au plus 200 caractères (actuellement 234).'])
+    
+    def test_form_valid_data_missed(self):
+        form = ContenirForm(data = {'quantite': 60})
+        self.assertFalse(form.is_valid()) # Le formulaire doit être invalide
+        self.assertIn('produits', form.errors) # Le champ 'nomContenir' doit contenir une erreur
+        self.assertEqual(form.errors['produits'], ['Ce champ est obligatoire.'])
+    
+    def test_form_save(self):
+        produit = Produit.objects.create(intituleProd="prod", prixUnitaireProd=59.99, dateFabricationProd='2025-09-09')
+        form = ContenirForm(data = {'produits': produit, 'quantite': 60})
+        self.assertTrue(form.is_valid())
+        contenir = form.save()
+        self.assertEqual(contenir.quantite, 'ContenirPourTest')
+        self.assertEqual(contenir.id, 1)

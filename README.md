@@ -34,4 +34,5 @@ Ajout de produits dans un rayon
 Ajout d'une page pour creer, modifier et supprimer une relation entre un produit et un rayon
 
 ## TP4
-Ajout des test pour le modèle, le formulaire, les url et les views de categorie
+Ajout des test pour le modèle, le formulaire, les url et les views de *categorie*, *rayon*, *produit*
+![coverage report](coverage_report.png)
